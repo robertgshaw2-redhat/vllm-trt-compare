@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nim
+  namespace: comparison
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: nim
+  template:
+    metadata:
+      labels:
+        name: nim
+    spec:
+      containers:
+        - name: nim
+          image: "nvcr.io/nim/meta/llama-3.3-70b-instruct"
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+              name: http
+              protocol: TCP
+          resources:
+            limits:
+              cpu: "32"
+              memory: 256Gi
+              nvidia.com/gpu: 4
+            requests:
+              cpu: "32"
+              memory: 256Gi
+              nvidia.com/gpu: 4
+          volumeMounts:
+            - mountPath: /dev/shm
+              name: shm
+          env:
+            - name: NIM_MODEL_PROFILE
+              value: tensorrt_llm-h200-bf16-tp4-pp1-latency-2335:10de-4
+            - name: NIM_ENABLE_KV_CACHE_REUSE
+              value: "1"
+            - name: NGC_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: ngc-token-secret
+                  key: token
+      imagePullSecrets:
+        - name: nvcr-secret
+      volumes:
+        - name: shm
+          emptyDir:
+            medium: Memory
+            sizeLimit: "16Gi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nim
+  namespace: comparison
+spec:
+  type: ClusterIP
+  selector:
+    name: nim
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8000
+      targetPort: 8000
