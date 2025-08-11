@@ -30,7 +30,7 @@ kubectl create secret docker-registry nvcr-secret \
 - deploy
 
 ```bash
-# note: update the NIM_MODEL_PROFILE to whatever is needed - e.g. 
+# note: update the NIM_MODEL_PROFILE for your device - e.g. for h100: tensorrt_llm-h100-bf16-tp4-pp1-throughput-2330:10de-4
 kubectl apply -f manifest-nim.yaml
 kubectl apply -f manifest-rhaiis.yaml
 kubeclt apply -f guidellm.yaml
