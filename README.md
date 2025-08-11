@@ -29,6 +29,7 @@ kubectl create secret docker-registry nvcr-secret \
 - deploy
 
 ```bash
+# note: update the NIM_MODEL_PROFILE to whatever is needed - e.g. 
 kubectl apply -f manifest-nim.yaml
 kubectl apply -f manifest-rhaiis.yaml
 kubeclt apply -f guidellm.yaml
@@ -44,7 +45,7 @@ kubectl get services
 >> rhaiis   ClusterIP   10.16.3.8     <none>        8000/TCP   50s
 ```
 
-- launch benchmark
+- launch interactive pod
 
 ```bash
 kubectl cp sweep-nim.sh comparison/interactive-pod:/opt/app-root/src
@@ -52,7 +53,7 @@ kubectl cp sweep-vllm.sh comparison/interactive-pod:/opt/app-root/src
 kubectl exec -it interactive-pod -- /bin/bash
 ```
 
-- inside the benchmark pod
+- inside the interactive pod, launch the benchmark
 ```bash
 cd /opt/app-root/src
 URL=http://10.16.3.8:8000 ./sweep-vllm.sh
