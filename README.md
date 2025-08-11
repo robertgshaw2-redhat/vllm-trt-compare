@@ -1,4 +1,4 @@
-# Comparison
+### Comparsion Demo
 
 - setup namespace
 
@@ -10,13 +10,14 @@ kubectl config set-context --current --namespace=comparison
 - setup secrets
 
 ```bash
+# NOTE: you will need to add your secrets
 kubectl apply -f nim-secret.yaml
 kubectl apply -f rh-registry-secret.yaml
 kubectl apply -f hf-secret.yaml
 
-# NGC API key from https://ngc.nvidia.com/setup/api-key
+# NOTE: add your email and secrets
 export NGC_API_KEY=...
-export EMAIL=robertgshaw2@gmail.com
+export EMAIL=...
 
 kubectl create secret docker-registry nvcr-secret \
   --docker-server=nvcr.io \
